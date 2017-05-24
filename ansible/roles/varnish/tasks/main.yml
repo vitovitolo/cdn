@@ -1,0 +1,19 @@
+---
+# Varnish main task
+- name: Install Varnish
+  apt: name=varnish state=installed
+  tags: varnish
+
+- name: Set Varnish configuration
+  template:
+    src: default.vcl.j2
+    dest: /etc/varnish/default.vcl
+    mode: 0644
+#    validate: varnishd -C -f %s 
+  notify: restart varnish
+  tags: varnish
+
+- name: Start Varnish
+  service: name=varnish state=started enabled=yes
+  tags: varnish
+

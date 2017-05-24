@@ -1,6 +1,7 @@
 - hosts: all
   roles:
     - haproxy
+    - varnish
   gather_facts: false
 
   # Ansible requires python2, which is not installed by default on Ubuntu Xenial

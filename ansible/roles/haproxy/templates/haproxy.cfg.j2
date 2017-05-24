@@ -31,7 +31,7 @@ listen public
 	option httplog
 	option http-server-close
 
-	# el resto redirecciona al HTTPS correspondiente
+	#by default port 80 redirect to 443
 	redirect scheme https
 
 listen publicssl
@@ -42,43 +42,26 @@ listen publicssl
 	option httplog
 	option http-server-close
 
-	#for ssl client certificate authentication
-	http-request set-header X-SSL                  %[ssl_fc]
-	http-request set-header X-SSL-Has-Cert         %[ssl_fc_has_crt]
-	http-request set-header X-SSL-Session_ID       %[ssl_fc_session_id]
-	http-request set-header X-SSL-Client-Verify    %[ssl_c_verify]
-	http-request set-header X-SSL-SerialNumber     %[ssl_c_serial]
-	http-request set-header X-SSL-Client-DN        %{+Q}[ssl_c_s_dn]
-	http-request set-header X-SSL-Client-CN        %{+Q}[ssl_c_s_dn(cn)]
-	http-request set-header X-SSL-Issuer           %{+Q}[ssl_c_i_dn]
-	http-request set-header X-SSL-Client-NotBefore %{+Q}[ssl_c_notbefore]
-	http-request set-header X-SSL-Client-NotAfter  %{+Q}[ssl_c_notafter]
-	
-	balance roundrobin
-	server localhost {{ haproxy_local_ip }}:80
+	#send all request to cache first, if cache is down send to appservers	
+	server cache {{ varnish_bind_ip }}:{{ varnish_bind_port }} check
+	server appservers {{ haproxy_appservers_ip }}:{{ haproxy_appservers_port }} check backup
 
 listen appservers
-	bind {{ haproxy_local_ip }}:8080
+	bind {{ haproxy_appservers_ip }}:{{ haproxy_appservers_port }}
 	mode http
 	option httplog
 	option forwardfor
 	option http-server-close
 	balance roundrobin
-	server app1 server1.com:443
-	server app2 server2.com:443
-	server app3 server3.com:443
-
-#############
-### Backends
-#############
-backend varnish
-
+{% for backend in haproxy_appservers_backends %}  
+	server {{ backend.name }} {{ backend.address }}:{{ backend.port }} check
+{% endfor %}
 
 ##############
 ### STATS
 ################
 listen stats 
-	bind {{ haproxy_local_ip }}:8888
+	bind {{ haproxy_stats_ip }}:{{ haproxy_stats_port }}
 	mode http
 	stats enable
 	stats uri /

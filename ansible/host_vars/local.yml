@@ -1,0 +1,4 @@
+haproxy_appservers_ip: "127.0.0.1"
+haproxy_appservers_port: "8080"
+varnish_bind_ip: "127.0.0.1"
+varnish_bind_port: "6081"
