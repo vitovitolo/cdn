@@ -1,0 +1,26 @@
+---
+# HAProxy main task
+- name: Install HAProxy
+  apt: name=haproxy state=installed
+  tags: haproxy
+
+- name: Set HAProxy SSL cert file
+  copy: 
+    src: "{{ haproxy_ssl_certfile }}"
+    dest: "{{ haproxy_ssl_path }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+
+- name: Set HAProxy configuration
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+    validate: haproxy -f %s -c -q
+  notify: restart haproxy
+
+- name: Start HAProxy
+  service: name=haproxy state=started enabled=yes
+  tags: haproxy
+

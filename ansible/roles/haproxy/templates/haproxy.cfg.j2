@@ -1,0 +1,85 @@
+global
+	pidfile /var/run/haproxy.pid
+	stats socket /var/run/haproxy.sock level admin
+	log /dev/log   local0 info
+	maxconn 64000
+	user haproxy
+	group haproxy
+	daemon
+	tune.ssl.default-dh-param 2048
+
+defaults
+	log     global
+	mode    http
+	option  tcplog
+	option  dontlognull
+	retries 3
+	option  redispatch
+	maxconn 10000
+	timeout client 60s
+	timeout server 60s
+	timeout tunnel 1h
+	timeout connect 5s
+	timeout queue 5s
+	timeout check 10s
+	
+
+listen public
+	bind {{ haproxy_public_ip}}:80
+
+	mode http
+	option httplog
+	option http-server-close
+
+	# el resto redirecciona al HTTPS correspondiente
+	redirect scheme https
+
+listen publicssl
+	bind {{ haproxy_public_ip }}:443 ssl crt {{ haproxy_ssl_path }} ciphers ECDHE+aRSA+AES256+GCM+SHA384:ECDHE+aRSA+AES128+GCM+SHA256:ECDHE+aRSA+AES256+SHA384:ECDHE+aRSA+AES128+SHA256:ECDHE+aRSA+AES256+SHA:ECDHE+aRSA+AES128+SHA:AES256+GCM+SHA384:AES128+GCM+SHA256:AES128+SHA256:AES256+SHA256:DHE+aRSA+AES128+SHA:HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!RC4 no-sslv3
+
+	mode http
+	option forwardfor
+	option httplog
+	option http-server-close
+
+	#for ssl client certificate authentication
+	http-request set-header X-SSL                  %[ssl_fc]
+	http-request set-header X-SSL-Has-Cert         %[ssl_fc_has_crt]
+	http-request set-header X-SSL-Session_ID       %[ssl_fc_session_id]
+	http-request set-header X-SSL-Client-Verify    %[ssl_c_verify]
+	http-request set-header X-SSL-SerialNumber     %[ssl_c_serial]
+	http-request set-header X-SSL-Client-DN        %{+Q}[ssl_c_s_dn]
+	http-request set-header X-SSL-Client-CN        %{+Q}[ssl_c_s_dn(cn)]
+	http-request set-header X-SSL-Issuer           %{+Q}[ssl_c_i_dn]
+	http-request set-header X-SSL-Client-NotBefore %{+Q}[ssl_c_notbefore]
+	http-request set-header X-SSL-Client-NotAfter  %{+Q}[ssl_c_notafter]
+	
+	balance roundrobin
+	server localhost {{ haproxy_local_ip }}:80
+
+listen appservers
+	bind {{ haproxy_local_ip }}:8080
+	mode http
+	option httplog
+	option forwardfor
+	option http-server-close
+	balance roundrobin
+	server app1 server1.com:443
+	server app2 server2.com:443
+	server app3 server3.com:443
+
+#############
+### Backends
+#############
+backend varnish
+
+
+##############
+### STATS
+################
+listen stats 
+	bind {{ haproxy_local_ip }}:8888
+	mode http
+	stats enable
+	stats uri /
+

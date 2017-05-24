@@ -1,0 +1,4 @@
+haproxy_public_ip: "127.0.0.1"
+haproxy_local_ip: "127.0.0.1"
+haproxy_ssl_certfile: "cdn.pem"
+haproxy_ssl_path: "/etc/haproxy/{{ haproxy_ssl_certfile }}"
