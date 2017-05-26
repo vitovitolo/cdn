@@ -1,0 +1,24 @@
+---
+# Sinatra main task
+- name: Install Ruby and Sinatra framework
+  apt:
+    name: ruby-sinatra
+    state: installed
+    update_cache: yes
+  tags: sinatra
+
+- name: Desploy web app
+  copy:
+    src: stats
+    dest: /var/www/
+    owner: "www-data"
+    group: "www-data"
+  tags: sinatra
+
+- name: Create public path
+  file:
+    dest: /var/www/{{ sinatra_app_path }}/public
+    owner: "www-data"
+    group: "www-data"
+    state: directory
+  tags: sinatra

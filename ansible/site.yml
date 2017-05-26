@@ -2,6 +2,9 @@
   roles:
     - haproxy
     - varnish
+    - passenger
+    - nginx
+    - sinatra
   gather_facts: false
 
   # Ansible requires python2, which is not installed by default on Ubuntu Xenial

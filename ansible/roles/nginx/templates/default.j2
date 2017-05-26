@@ -1,0 +1,11 @@
+# Default server configuration
+#
+server {
+	listen {{ nginx_bind_port }} default_server;
+	server_name _;
+
+
+	root /var/www/{{ sinatra_app_name }}/public;
+	passenger_enabled on;
+}
+

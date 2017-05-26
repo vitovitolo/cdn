@@ -19,4 +19,5 @@ Vagrant.configure("2") do |config|
 		ansible.playbook = "ansible/site.yml"
 		ansible.sudo = true
 	end
+	config.vm.synced_folder "/tmp/", "/vagrant"
 end

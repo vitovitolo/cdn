@@ -1,0 +1,36 @@
+---
+# Nginx main task
+- name: Mask Nginx systemd unit in order to avoid bind error
+  file:
+    src: /dev/null
+    dest: /etc/systemd/system/nginx.service
+    state: link
+  tags: nginx
+
+- name: Install Nginx with extra modules
+  apt:
+    name: nginx-extras
+    state: installed
+    update_cache: yes
+  tags: nginx
+
+- name: Set Nginx main configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+  tags: nginx
+
+- name: Set Nginx site configuration
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
+    mode: 0644
+  tags: nginx
+
+- name: Unmasked systemd unit
+  command: "sudo systemctl unmask nginx.service"
+  notify: 
+    - restart nginx
+    - restart haproxy
+  tags: nginx

@@ -1,7 +1,10 @@
 ---
 # Varnish main task
 - name: Install Varnish
-  apt: name=varnish state=installed
+  apt:
+    name: varnish
+    state: installed
+    update_cache: yes
   tags: varnish
 
 - name: Set Varnish configuration
@@ -9,9 +12,16 @@
     src: default.vcl.j2
     dest: /etc/varnish/default.vcl
     mode: 0644
-#    validate: varnishd -C -f %s 
   notify: restart varnish
   tags: varnish
+
+- name: Set Varnish systemd unit
+  template:
+    src: varnish.service.j2
+    dest: /lib/systemd/system/varnish.service
+
+- name: Reload systemd daemon config
+  command: "sudo systemctl daemon-reload"
 
 - name: Start Varnish
   service: name=varnish state=started enabled=yes

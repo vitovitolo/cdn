@@ -1,0 +1,4 @@
+sinatra_app_name: "stats"
+sinatra_app_path: "stats"
+sinatra_class_name: "Stats"
+
