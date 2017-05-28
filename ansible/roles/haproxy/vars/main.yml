@@ -18,3 +18,6 @@ haproxy_appservers_backends:
 
 haproxy_ssl_certfile: "cdn.pem"
 haproxy_ssl_path: "/etc/haproxy/{{ haproxy_ssl_certfile }}"
+
+haproxy_log_filename: "/var/log/haproxy.log"
+haproxy_accesslog_filename: "/var/log/haproxy_access.log"

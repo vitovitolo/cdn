@@ -2,7 +2,9 @@
 # Sinatra main task
 - name: Install Ruby and Sinatra framework
   apt:
-    name: ruby-sinatra
+    name: 
+       - ruby-sinatra
+       - ruby-sinatra-contrib
     state: installed
     update_cache: yes
   tags: sinatra
@@ -15,6 +17,12 @@
     group: "www-data"
   tags: sinatra
 
+- name: Config app
+  template:
+    src: config.yml.j2
+    dest: /var/www/{{ sinatra_app_path }}/config.yml
+  tags: sinatra
+    
 - name: Create public path
   file:
     dest: /var/www/{{ sinatra_app_path }}/public

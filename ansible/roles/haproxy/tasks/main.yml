@@ -17,6 +17,19 @@
     mode: 0644
   tags: haproxy
 
+- name: Set HAProxy rsyslog configuration
+  template:
+    src: haproxy.conf.j2
+    dest: /etc/rsyslog.d/49-haproxy.conf
+  notify: restart rsyslog
+  tags: haproxy
+
+- name: Set HAProxy log permissions
+  file:
+    dest: "{{ haproxy_accesslog_filename }}"
+    mode: 0644
+  tags: haproxy
+
 - name: Set HAProxy configuration
   template:
     src: haproxy.cfg.j2

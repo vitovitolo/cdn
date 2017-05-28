@@ -1,5 +1,9 @@
 haproxy_appservers_ip: "127.0.0.1"
 haproxy_appservers_port: "8080"
+haproxy_log_filename: "/var/log/haproxy.log"
+haproxy_accesslog_filename: "/var/log/haproxy_access.log"
+
 varnish_bind_ip: "127.0.0.1"
 varnish_bind_port: "6081"
+
 sinatra_app_name: "stats"

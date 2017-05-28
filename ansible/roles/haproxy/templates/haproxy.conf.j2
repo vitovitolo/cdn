@@ -1,0 +1,4 @@
+# /dev/log to chroot'ed HAProxy processes
+$AddUnixListenSocket /var/lib/haproxy/dev/log
+
+local1.* -{{ haproxy_accesslog_filename }}

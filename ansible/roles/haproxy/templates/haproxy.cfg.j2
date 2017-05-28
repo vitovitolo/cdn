@@ -1,7 +1,6 @@
 global
 	pidfile /var/run/haproxy.pid
 	stats socket /var/run/haproxy.sock level admin
-	log /dev/log   local0 info
 	maxconn 64000
 	user haproxy
 	group haproxy
@@ -9,7 +8,6 @@ global
 	tune.ssl.default-dh-param 2048
 
 defaults
-	log     global
 	mode    http
 	option  tcplog
 	option  dontlognull
@@ -41,6 +39,7 @@ listen publicssl
 	option forwardfor
 	option httplog
 	option http-server-close
+	log /dev/log   local1 info
 
 	#send all request to cache first, if cache is down send to appservers	
 	server cache {{ varnish_bind_ip }}:{{ varnish_bind_port }} check
