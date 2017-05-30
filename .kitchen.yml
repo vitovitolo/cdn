@@ -1,6 +1,8 @@
 ---
 driver:
   name: vagrant
+  synced_folders:
+    - ["ansible/test", "/tmp/test"]
 
 platforms:
   - name: ubuntu-16.04
@@ -27,4 +29,5 @@ suites:
   - name: default
     verifier:
       patterns:
-        - ansible/test/integration/default/serverspec/default_spec.rb
+        - /tmp/test/integration/default/serverspec/default_spec.rb
+
