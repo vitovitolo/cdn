@@ -9,6 +9,8 @@ Vagrant.configure("2") do |config|
 	config.vm.box = "ubuntu/xenial64"
 	config.vm.box_url = "https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box"
 	config.vm.hostname = "ubuntu-xenial"
+	config.vm.network "private_network", ip: "192.168.77.77", auto_config: false
+	config.vm.provision 'shell', inline: "ifconfig enp0s8 192.168.77.77"
 
 	config.vm.provider :virtualbox do |vb|
 		vb.gui = false
