@@ -41,6 +41,10 @@ listen publicssl
 	option http-server-close
 	log /dev/log   local1 info
 
+	#send /stats URL to stats web service
+	acl isproxystats path_beg -i /stats
+	use_backend proxystats if isproxystats
+
 	#send all request to cache first, if cache is down send to appservers	
 	server cache {{ varnish_bind_ip }}:{{ varnish_bind_port }} check
 	server appservers {{ haproxy_appservers_ip }}:{{ haproxy_appservers_port }} check backup
@@ -55,6 +59,13 @@ listen appservers
 {% for backend in haproxy_appservers_backends %}  
 	server {{ backend.name }} {{ backend.address }}:{{ backend.port }} check
 {% endfor %}
+
+backend proxystats
+        mode http
+        option httplog
+        option forwardfor
+        option http-server-close
+        server nginx {{ nginx_bind_ip }}:{{ nginx_bind_port }} check
 
 ##############
 ### STATS

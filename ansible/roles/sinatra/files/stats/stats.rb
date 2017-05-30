@@ -45,7 +45,7 @@ class Stats < Sinatra::Base
 	counter
    end
 
-   get "/" do
+   get "/stats" do
       content_type :json
       { :requests => count_requests(settings.proxy_log) }.to_json
    end

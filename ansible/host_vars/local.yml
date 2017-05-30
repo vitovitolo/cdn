@@ -7,3 +7,6 @@ varnish_bind_ip: "127.0.0.1"
 varnish_bind_port: "6081"
 
 sinatra_app_name: "stats"
+
+nginx_bind_ip: "127.0.0.1"
+nginx_bind_port: "8000"

@@ -25,7 +25,7 @@ sub vcl_recv {
 	return (purge);
     }
     #Do not cache stats web app
-    if (req.url ~ "/stats/") {
+    if (req.url ~ "/stats") {
     	return (pass);
     #Cache static content only
     } elsif (req.url ~ "(?i)\.{{ varnish_static_content_regex }}$") {
