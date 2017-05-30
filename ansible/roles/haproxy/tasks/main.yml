@@ -17,6 +17,14 @@
     mode: 0644
   tags: haproxy
 
+- name: Set Rsyslog config
+  template:
+    src: rsyslog.conf.j2
+    dest: /etc/rsyslog.conf
+    owner: root
+    group: root
+  tags: haproxy
+
 - name: Set HAProxy rsyslog configuration
   template:
     src: haproxy.conf.j2
@@ -28,6 +36,8 @@
   file:
     dest: "{{ haproxy_accesslog_filename }}"
     state: touch
+    owner: syslog
+    group: adm
     mode: 0644
   tags: haproxy
 
