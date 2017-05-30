@@ -17,6 +17,14 @@
     group: "www-data"
   tags: sinatra
 
+- name: Desploy static content
+  copy:
+    src: public
+    dest: /var/www/static/
+    owner: "www-data"
+    group: "www-data"
+  tags: sinatra
+
 - name: Config app
   template:
     src: config.yml.j2
