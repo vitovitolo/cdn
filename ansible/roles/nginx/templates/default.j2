@@ -1,7 +1,7 @@
 # Default server configuration
 #
 server {
-	listen {{ nginx_bind_port }} default_server;
+	listen {{ nginx_bind_ip }}:{{ nginx_bind_port }} default_server;
 	server_name _;
 
 
