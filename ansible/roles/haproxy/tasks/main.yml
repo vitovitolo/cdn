@@ -27,6 +27,7 @@
 - name: Set HAProxy log permissions
   file:
     dest: "{{ haproxy_accesslog_filename }}"
+    state: touch
     mode: 0644
   tags: haproxy
 
