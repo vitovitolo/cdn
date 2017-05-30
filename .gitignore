@@ -1,3 +1,5 @@
 .vagrant
 *.log
 *.retry
+.kitchen/
+.kitchen.local.yml
