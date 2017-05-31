@@ -6,7 +6,7 @@ This is a simple CDN server with some basic static content cache
 
 This vagrant box will set up a HAProxy + Varnish + Nginx + Sinatra Web Service
 
-![alt text](https://github.com/vitovitolo/cdn/raw/develop/docs/diagram.png = 400x400 "Architecture")
+![alt text](https://github.com/vitovitolo/cdn/raw/develop/docs/diagram.png "Architecture")
 
 The proxy redirect all requests to the cache except URL like /stats. This kind of requests will sent to the statistics web app. 
 
