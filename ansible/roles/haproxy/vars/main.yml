@@ -7,13 +7,13 @@ haproxy_appservers_ip: "127.0.0.1"
 haproxy_appservers_port: "8080"
 haproxy_appservers_backends:
    - name: app1
-     address: "server1.com"
+     address: "169.45.0.141"
      port: 443
    - name: app2
-     address: "server2.com"
+     address: "169.45.0.149"
      port: 443
    - name: app3
-     address: "server3.com"
+     address: "169.45.0.157"
      port: 443
 
 haproxy_ssl_certfile: "cdn.pem"
