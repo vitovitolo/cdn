@@ -45,9 +45,18 @@ class Stats < Sinatra::Base
 	counter
    end
 
+   def get_varnish_stat(blob)
+        response = %x[varnishstat -1 -j -f #{blob}]
+        json_response = JSON.parse(response)
+        json_response[blob]["value"]
+   end
+
    get "/stats" do
       content_type :json
-      { :requests => count_requests(settings.proxy_log) }.to_json
+      { :requests => count_requests(settings.proxy_log),
+        :cache_miss => get_varnish_stat("MAIN.cache_miss"),
+        :cache_hits => get_varnish_stat("MAIN.cache_hit") }.to_json
    end
+
 end
 
