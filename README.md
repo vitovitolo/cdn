@@ -118,7 +118,7 @@ Then the cache HITS are growing again:
 ``` 
 curl -v -k -L https://192.168.77.77/stats
 
-{"requests":15,"cache_miss":1,"cache_hits":11}
+{"requests":14,"cache_miss":1,"cache_hits":11}
 ```
 
 The cache is configured for excluding URLs like /api:
@@ -158,7 +158,7 @@ Then we could not see the request in the cache but the requests counter is growi
 ```
 curl -v -k -L https://192.168.77.77/stats
 
-{"requests":17,"cache_miss":1,"cache_hits":11}
+{"requests":16,"cache_miss":1,"cache_hits":11}
 ```
 
 ## Test the code
