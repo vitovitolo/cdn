@@ -57,7 +57,7 @@ listen appservers
 	option http-server-close
 	balance roundrobin
 {% for backend in haproxy_appservers_backends %}  
-	server {{ backend.name }} {{ backend.address }}:{{ backend.port }} check
+	server {{ backend.name }} {{ backend.address }}:{{ backend.port }} check ssl verify none
 {% endfor %}
 
 backend proxystats
