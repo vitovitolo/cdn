@@ -14,6 +14,14 @@
     update_cache: yes
   tags: nginx
 
+- name: Add www-data user to varnish group
+  user: 
+    name: www-data
+    group: www-data
+    groups: varnish
+    shell: /usr/sbin/nologin
+  tags: nginx
+
 - name: Set Nginx main configuration
   template:
     src: nginx.conf.j2
