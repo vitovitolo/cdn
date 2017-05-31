@@ -11,9 +11,12 @@ packages_list.each do |package|
   end
 end
 
-describe service('haproxy') do
-  it { should be_enabled }
-  it { should be_running }
+services_list = [ "haproxy", "nginx", "varnish" ]
+services_list.each do |service|
+  describe service(service) do
+    it { should be_enabled }
+    it { should be_running }
+  end
 end
 
 #Test localhost haproxy, nginx and varnish listen ports
@@ -25,7 +28,7 @@ port_list.each do |port|
   end
 end
 
-#describe file('/var/log/haprox_access.log') do
-#  it { should be_file }
-#  it { should be_readable.by('others') }
-#end
+describe file('/var/log/haproxy_access.log') do
+  it { should be_file }
+  it { should be_readable.by('others') }
+end
