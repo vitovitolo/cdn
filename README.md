@@ -2,6 +2,42 @@
 
 This is a simple CDN server with some basic static content cache
 
+## Design
+
+This vagrant box will set up a HAProxy + Varnish + Nginx + Sinatra Web Service
+
+![alt text](https://github.com/vitovitolo/cdn/raw/develop/docs/diagram.png "Architecture")
+
+The proxy redirect all requests to the cache except URL like /stats. This kind of requests will sent to the statistics web app. 
+
+If the cache will miss some content, it will request to another proxy in order to balance the requests between the app servers. Another reason to setup another proxy in front of the app servers is that Varnish doesnt support SSL backends.
+
+The cache is configured with 512m of memory limit but it is configurable.
+
+The Stats web service is configured to parse the proxy access log to retrieve the last 24 hours requests and exec some cache shell command to show the hits and miss requests also.
+
+
+HAproxy has few ports opened for different purpose
+
+- 80/tcp HTTP: Public HTTP port redirect allways to HTTPS
+
+- 443/tcp HTTPS: Public HTTPS port redirect to Varnish if URL is not /stats
+
+- 8080/tcp: App Servers proxy. Balanace in roundrobin agains three SSL backends configured
+
+- 8888/tcp: HAProxy Stats socket
+
+Varnish has two ports opened:
+
+- 6081/tcp: Main port to receive requests
+
+- 6082/tcp: Admin socket
+
+Nginx 
+
+- 8000: Passenger + Sinatra Web App with statistics about cache and proxy
+
+
 ## Requirements
 
 This project was created and tested in a Debian Jessie box with:
